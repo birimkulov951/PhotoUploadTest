@@ -1,5 +1,7 @@
 package com.example.photouploadtest
 
+import com.example.photouploadtest.model.TokenRequest
+import com.example.photouploadtest.model.TokenResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -30,6 +32,12 @@ interface ApiService {
                  @Part("has_rostrum") hasRostrum: RequestBody,
                  @Part("has_equipment") hasEquipment: RequestBody
     ): Call<AddFieldResponse>
+
+
+    /**    POST   */
+    @POST("api/auth/token/")
+    fun getNewToken(@Body info: TokenRequest): Call<TokenResponse>
+
 
 
 }

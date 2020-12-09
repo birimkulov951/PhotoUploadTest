@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.photouploadtest.model.TokenRequest
+import com.example.photouploadtest.model.TokenResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -80,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
+        getNewToken()
 
 
     }
@@ -220,6 +222,45 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun getNewToken() {
+
+        val body = TokenRequest("qwerty","+996709069049")
+
+        val retroInstance = RetrofitInstance.getRetrofitInstance().create(ApiService::class.java)
+        val call = retroInstance.getNewToken(body)
+
+
+        call.enqueue(object : Callback<TokenResponse> {
+
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+
+
+                val text = findViewById<TextView>(R.id.text)
+
+
+                if (response.isSuccessful) {
+
+                    Log.e(TAG, "onResponse: ${response.body()}")
+
+                    text.text = response.body()?.token.toString()
+                    token = response.body()?.token.toString()
+
+                    //addFieldHours(response.body()?.id)
+
+                } else {
+                    Log.e(TAG, "onResponse: ${response.body()}")
+                }
+            }
+
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                Log.e(TAG, "onFailure: $t")
+                Toast.makeText(this@MainActivity, "unknown error", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
     }
 
 }
